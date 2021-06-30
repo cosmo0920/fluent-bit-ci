@@ -22,8 +22,11 @@ func (suite *Suite) TestDummyInputToElasticSearchOutput() {
 
 	status := retry.DoWithRetry(suite.T(), "Check if fluentbit index exists", tests.DefaultMaxRetries, tests.DefaultRetryTimeout, func() (string, error) {
 		output, err := suite.RunKubectlExec("elasticsearch-master-0", "curl", "-s", "-w", "%{http_code}", "http://localhost:9200/fluentbit/_search/", "-o", "/dev/null")
-		if output != "200" || err != nil {
-			return "", fmt.Errorf("Not found index /fluentbit")
+		if output != "200" {
+			return "", fmt.Errorf("index not found /fluentbit, status: %s", output)
+		}
+		if err != nil {
+			return "", fmt.Errorf("index not found /fluentbit, error: %s", err)
 		}
 		return output, nil
 	})
