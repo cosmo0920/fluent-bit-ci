@@ -61,6 +61,10 @@ then
     find lib -name "*.gcda" -o -name "*.gcno" -print0 | xargs -0 -r rm
     gcovr -e "build/sql.l" -e "build/sql.y" -e "build/ra.l" -e "build/ra.y" -p -r .. . | cut -c1-100
     gcovr -e "build/sql.l" -e "build/sql.y" -e "build/ra.l" -e "build/ra.y" --html --html-details -p -r .. -o coverage/index.html .
+    
+    # generate and update coveralls
+    gcovr -e "build/sql.l" -e "build/sql.y" -e "build/ra.l" -e "build/ra.y" -p -r .. . --coveralls coveralls.json
+    
     echo
     echo "See coverage/index.html for code-coverage details"
 fi
